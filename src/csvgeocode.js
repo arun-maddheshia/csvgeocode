@@ -142,16 +142,16 @@ Geocoder.prototype.run = function(input,output,options) {
   function handleResponse(body,row,url,cb) {
 
     var result;
-
+    let geoAddressBody;
     try {
       result = options.handler(body);
+      geoAddressBody = JSON.parse(body);
     } catch (e) {
       _this.emit("row","Parsing error: "+e.toString(),row);
     }
 
     //Error code
     if (typeof result === "string") {
-
       row[options.lat] = "";
       row[options.lng] = "";
 
@@ -159,9 +159,29 @@ Geocoder.prototype.run = function(input,output,options) {
 
     //Success
     } else if ("lat" in result && "lng" in result) {
-
+      
+      let location = {};
+      location.coordinates = [result.lng, result.lat];
+      if(geoAddressBody) {
+        location.formattedAddress = geoAddressBody.results[0].formatted_address;
+        geoAddressBody.results[0].address_components.forEach(addressItem => {
+          if (addressItem['types'] && addressItem['types']['0'] === 'postal_code') {
+            location.postalCode = addressItem['long_name'] ? addressItem['long_name'] : '';
+          }
+          if (addressItem['types'] && addressItem['types']['0'] === 'country') {
+            location.country = addressItem['long_name'] ? addressItem['long_name'] : '';
+          }
+          if (addressItem['types'] && addressItem['types']['0'] === 'administrative_area_level_1') {
+            location.region = addressItem['long_name'] ? addressItem['long_name'] : '';
+          }
+          if (addressItem['types'] && addressItem['types']['0'] === 'administrative_area_level_2') {
+            location.locality = addressItem['long_name'] ? addressItem['long_name'] : '';
+          }
+        });
+      }
       row[options.lat] = result.lat;
       row[options.lng] = result.lng;
+      row[options.location] = location;
 
       //Cache the result
       cache[url] = result;
@@ -169,7 +189,6 @@ Geocoder.prototype.run = function(input,output,options) {
 
     //Unknown extraction error
     } else {
-
       _this.emit("row","Invalid return value from handler for response body: "+body,row);
 
     }

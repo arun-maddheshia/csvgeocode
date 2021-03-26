@@ -11,18 +11,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/veltman/csvgeocode.git"
+    "url": "https://github.com/arun-maddheshia/csvgeocode"
   },
   "keywords": ["geocode", "geocoding", "address", "csv"],
   "bin": {
     "csvgeocode": "./bin/csvgeocode"
   },
-  "author": "Noah Veltman (@veltman)",
+  "author": "Noah Veltman (@veltman), Arun Maddheshia",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/veltman/csvgeocode/issues"
+    "url": "https://github.com/arun-maddheshia/csvgeocode/issues"
   },
-  "homepage": "https://github.com/veltman/csvgeocode",
+  "homepage": "https://github.com/arun-maddheshia/csvgeocode",
   "dependencies": {
     "dsv": "0.0.4",
     "extend": "^2.0.0",

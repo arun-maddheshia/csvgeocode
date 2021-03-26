@@ -3,5 +3,6 @@ module.exports =  {
   lng: null,
   delay: 250,
   force: false,
-  handler: "google"
+  handler: "google",
+  location: 'location',
 };
